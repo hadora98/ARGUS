@@ -111,15 +111,26 @@ def get_structured_data(markdown_content: str, prompt: str, json_schema: str, im
     modality_instruction = ""
     if has_text and has_images:
         modality_instruction = """
-        **MULTIMODAL INPUT DETECTED**: You have both text (OCR) and images available.
-        
+        **MULTIMODAL INPUT DETECTED**: You have both text (OCR) and images available. The text and images contain complex tables
+        and structured data. This data can be in the form of tables or matrices with multile levels of rows and columns.
+        Based on the provided text and images, deduce whether the data is in the form of a table and matrix and extract the
+        information accordingly. Use the following extraction strategy:
+       
         EXTRACTION STRATEGY:
         1. Use the OCR text as your primary source for detailed information (names, numbers, exact text)
         2. Use the images to validate the OCR text and extract any visual elements not captured in text
         3. Cross-reference between text and images to ensure accuracy
         4. If there are discrepancies, prefer the images for layout and structure, text for precise details
         5. Extract information from BOTH sources to create a comprehensive result
-        
+        6. Make sure to differentiate between tables and matrices in the text and images.
+ 
+        VALIDATION CHECKS:
+        1. Ensure all fields in the JSON schema are filled with relevant data from the text and images.
+        2. Ensure totals match the underlying data in both text and images. If data does not sum up to any total columns,
+        this is an indicator that the data is not extracted correctly. If no totals are present in the text or images,
+        ignore this check.
+        3. Ensure no rows or columns are skipped in the extraction process.
+       
         The text contains the exact extracted content from the document, while images provide visual context and layout information.
         """
     elif has_text and not has_images:
