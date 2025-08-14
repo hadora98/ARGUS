@@ -1,15 +1,16 @@
 name: argus
 metadata:
   template: containerapp-python@latest
-infra:
-  provider: bicep
-  path: infra
 services:
   backend:
     project: src/containerapp
     language: python
     host: containerapp
+    docker:
+      remoteBuild: true
   frontend:
     project: frontend
     language: python
     host: containerapp
+    docker:
+      remoteBuild: true
